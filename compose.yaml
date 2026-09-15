@@ -1,0 +1,13 @@
+services:
+  arch-arena:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - game-data:/app/data
+      - game-assets:/app/static/assets
+    restart: unless-stopped
+    stop_grace_period: 10s
+volumes:
+  game-data:
+  game-assets:
