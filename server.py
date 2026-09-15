@@ -411,6 +411,11 @@ async def recover(request:Request):
  d=await request.json();token=str(d.get('key',''))
  if not DB.execute('SELECT 1 FROM rooms WHERE owner=?',(digest(token),)).fetchone():fail('Invalid recovery key.',403)
  res=JSONResponse({'ok':True});session_cookie(res,request,'arch_host',token);return res
+@app.get('/health')
+def health():
+ DB.execute('SELECT 1').fetchone()
+ return {'status':'ok'}
+
 @app.get('/app.js')
 def js():return FileResponse(ROOT/'static/app.js')
 @app.get('/style.css')

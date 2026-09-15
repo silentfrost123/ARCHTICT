@@ -184,6 +184,18 @@ PY
 
 Back up uploaded images alongside the database. A database backup does not contain the image bytes.
 
+## Railway deployment and 502 troubleshooting
+
+The repository includes `railway.json`, a `/health` endpoint, and `start.py`. The launcher binds to `0.0.0.0` and reads Railway's `PORT` environment variable (8000 when no variable is set). The Dockerfile and Railway configuration both use this launcher.
+
+1. Deploy the `main` branch with the repository root as the service root.
+2. Use the included Dockerfile and `python start.py` as the start command. Remove any old custom command that hard-codes another port.
+3. The generated domain's **target port must match the port printed by Uvicorn** in the deployment logs. A fixed target port of 8000 will not reach an app listening on a different assigned port.
+4. For a simple explicit configuration, set the service variable `PORT=8000` and the domain target port to `8000`, then deploy the changes.
+5. Check `https://YOUR-DOMAIN/health`; it should return `{"status":"ok"}`. If the app logs a successful startup but the domain returns 502, check the domain/service association and target port before changing application code.
+
+This fixes port configuration; it does not provision persistent storage. Railway does not automatically apply the volumes declared in `compose.yaml`. Before a real event, configure persistent storage for the database and uploaded images with appropriate permissions. Do not mount an empty volume over `static/assets` without first seeding its bundled assets. Without persistent storage, redeployments can discard event data and uploads.
+
 ## Deployment and security boundaries
 
 This is a **single-server event application**, not a managed high-availability service.
