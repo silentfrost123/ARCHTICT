@@ -1,4 +1,4 @@
-# ARCH ARENA
+# ARCHTICT — Arch Arena
 ### Think. Play. Build.
 
 An original, browser-based Architecture Day quiz show with a persistent backend, a private host workspace, a public projector screen, and real-time mobile participation.
